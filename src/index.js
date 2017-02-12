@@ -7,9 +7,12 @@ import 'normalize.css/normalize.css';
 import 'styles/App.scss';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-const FIRST_YEAR = 1961;
+const FIRST_YEAR = 1991;
 const LAST_YEAR = 2015;
 const metaList = [];
+
+const yearIndicator = document.querySelector('h2');
+
 // Data pipeline
 _.forEach(gdpInfoList, d => {
   const res = _.find(countryCapitals, c => c.CountryName == d['Country Name']);
@@ -25,7 +28,9 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiZGF2aWRndWFuIiwiYSI6ImNpcG50N2s4NDAwNGRmbG5je
 const map = new mapboxgl.Map({
     container: 'app',
     style: 'mapbox://styles/mapbox/streets-v10',
-    attributionControl: false
+    attributionControl: false,
+    zoom: 5,
+    center: [2.21, 46.2]
 });
 
 map.on('load', () => {
@@ -53,7 +58,6 @@ map.on('load', () => {
   });
 
   let year = FIRST_YEAR;
-  const yearIndicator = document.querySelector('h2');
   setInterval(function () {
     if (year <= LAST_YEAR) {
       yearIndicator.innerHTML = year;
@@ -65,7 +69,7 @@ map.on('load', () => {
         data.features.push({
           'type': 'Feature',
           'properties': {
-            radius: meta.gdp[year] / 18036648000000.0 * 60
+            radius: meta.gdp[year] / 18036648000000.0 * 150
           },
           'geometry': {
             'type': 'Point',
@@ -79,7 +83,7 @@ map.on('load', () => {
     } else {
       setTimeout(function () {
         year = FIRST_YEAR;
-      }, 10000);
+      }, 1000);
     }
   }, 300);
 });
